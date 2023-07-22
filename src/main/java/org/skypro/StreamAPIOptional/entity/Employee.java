@@ -6,30 +6,37 @@ public class Employee {
 
     private final String firstName;
     private final String lastName;
-    private String department;
-    private String salary;
+    private final int department;
+    private final double salary;
 
 
-    public Employee(String lastName, String firstName, String department, String salary) {
+    public Employee(String lastName, String firstName, double salary, int department) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.department = department;
         this.salary = salary;
     }
 
-    public Employee(String lastName, String firstName) {
-        this.lastName = lastName;
-        this.firstName = firstName;
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public int getDepartment() {
+        return department;
+    }
+
+    public double getSalary() {
+        return salary;
     }
 
     @Override
     public String toString() {
-        return "\t&#128073;" +
-                " lastName: '" + lastName + '\'' +
-                ", firstName: '" + firstName + '\'' +
-                ", department: " + department +
-                ", salary = " + salary +
-                " \t&#127937;; ";
+        return
+                "[" + lastName + ",  " + firstName + ",  " + salary + ",  " + department + "]  ";
     }
 
     @Override
@@ -44,4 +51,5 @@ public class Employee {
     public int hashCode() {
         return Objects.hash(lastName, firstName);
     }
+
 }
