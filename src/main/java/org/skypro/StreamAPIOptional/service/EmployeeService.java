@@ -7,52 +7,66 @@ import org.skypro.StreamAPIOptional.exception.EmployeeStorageIsFullException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class EmployeeService {
 
     private final List<Employee> employees = new ArrayList<>();
-    Map<String, Employee> employeeMap = new HashMap<>(Map.of(
-            "ВавиловОлег",
-            new Employee("Вавилов", "Олег", "1", "80_000.500")));
 
-    private final static int MAX_SIZE = 3;//максимальное кол сотрудников
+    public EmployeeService() {
+        employees.add(new Employee("Акатьев", "Андрей", 15000, 1));
+        employees.add(new Employee("Архипов", "Андрей", 10000, 1));
+        employees.add(new Employee("Астафьев", "Андрей", 1800.50, 1));
 
-    public String add(String lastName, String firstName, String department, String salary) {
-        if (employeeMap.size() >= MAX_SIZE) {
-            throw new EmployeeStorageIsFullException("переполнение массива сотрудников");
+        employees.add(new Employee("Глухов", "Глеб", 122345.50, 2));
+        employees.add(new Employee("Горохов", "Глеб", 1234.50, 2));
+
+        employees.add(new Employee("Дрожкин", "Денис", 30003.50, 3));
+        employees.add(new Employee("Дорофеев", "Денис", 333333.80, 3));
+    }
+
+    private final static int MAX_SIZE = 8;//максимальное кол сотрудников
+
+    public Employee add(String lastName, String firstName, double salary, int department) {
+
+        if (employees.size() >= MAX_SIZE) {
+            throw new EmployeeStorageIsFullException("Массив сотрудников переполнен");
         }
-        String key = lastName + firstName;
-        Employee newEmployee = new Employee(lastName, firstName, department, salary);
-        employeeMap.put(key, newEmployee);
+
+        Employee newEmployee = new Employee(firstName, lastName, salary, department);
+
         if (employees.contains(newEmployee)) {
-            throw new EmployeeAlreadyAddedException("такой сотрудник уже есть");
+            throw new EmployeeAlreadyAddedException("Такой сотрудник уже есть");
         }
+
         employees.add(newEmployee);
-        return "Добавлен___" + newEmployee;
+        return newEmployee;
+
     }
 
-    public String find(String lastName, String firstName) {
-        String key = lastName + firstName;
-        if (employeeMap.containsKey(key)) {
-            return "Найден___" + employeeMap.get(key);
+    public Employee find(String firstName, String lastName, double salary, int department) {
+        Employee employeeForFound = new Employee(firstName, lastName, salary, department);
+        for (Employee e : employees) {
+            if (e.equals(employeeForFound)) {
+                return e;
+            }
         }
-        throw new EmployeeNotFoundException("сотрудник не найден");
+        throw new EmployeeNotFoundException("Такого сотрудника нет");
     }
 
-    public String remove(String lastName, String firstName) {
-        Employee forRemove = new Employee(lastName, firstName);
-        String key = lastName + firstName;
-        String result = find(lastName , firstName );
-        employeeMap.remove(key);
-        employees.remove(forRemove);
-        return result + "___Удален!";
+    public Employee remove(String firstName, String lastName, double salary, int departmentId) {
+        Employee employeeForRemove = new Employee(firstName, lastName, salary, departmentId);
+
+        boolean removeResult = employees.remove(employeeForRemove);
+        if (removeResult) {
+            return employeeForRemove;
+        } else {
+            throw new EmployeeNotFoundException("Сотрудник  не был найден в базе");
+        }
     }
 
-    public String getAll() {
-        return String.valueOf(employeeMap);
+    public List<Employee> getAll() {
+        return employees;
     }
 }
