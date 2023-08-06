@@ -1,8 +1,11 @@
 package org.skypro.StreamAPIOptional.controller;
 
+import org.skypro.StreamAPIOptional.entity.Employee;
 import org.skypro.StreamAPIOptional.service.EmployeeService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpStatusCodeException;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/employee")
@@ -15,35 +18,37 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
 
-
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("/add")
-    public String add(@RequestParam String lastName,
-                      @RequestParam String firstName,
-                      @RequestParam String department,
-                      @RequestParam String salary) {
-        return employeeService.add(lastName, firstName, department, salary);
+    @GetMapping
+    public String getAll() {
+        return employeeService.getAll().toString();//выводим всех сотрудников
     }
 
-    @GetMapping("/get")
-    public String getAll() {
-        return employeeService.getAll();
+    @GetMapping("/add")
+    public Employee add(@RequestParam String lastName,
+                        @RequestParam String firstName,
+                        @RequestParam Integer department,
+                        @RequestParam double salary) {
+        return employeeService.add(lastName, firstName, salary, department);
     }
 
     @GetMapping("/find")
-    public String find(@RequestParam String lastName,
+    public Employee find(@RequestParam String lastName,
                        @RequestParam String firstName,
-                       @RequestParam String department,
-                       @RequestParam String salary) {
-        return employeeService.find(lastName, firstName);
+                       @RequestParam double salary,
+                       @RequestParam Integer department
+                       ) {
+        return employeeService.find(lastName, firstName, salary, department);
     }
 
     @GetMapping("/remove")
-    public String remove(@RequestParam String lastName,
-                         @RequestParam String firstName) {
-        return employeeService.remove(lastName, firstName);
+    public Employee remove(@RequestParam String lastName,
+                         @RequestParam String firstName,
+                         @RequestParam Integer department,
+                         @RequestParam double salary) {
+        return employeeService.remove(lastName, firstName, salary, department);
     }
 }
